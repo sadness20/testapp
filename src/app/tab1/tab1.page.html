@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Planets
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+
+  <div class="container" *ngIf="(planets | async) as planets">
+    <ion-list mode="ios">
+      <ion-item *ngFor="let planet of planets"  (click)="viewPlanet(planet)">
+        <ion-label>{{planet.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

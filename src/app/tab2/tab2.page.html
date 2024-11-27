@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Person
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+
+  <div class="container" *ngIf="(people | async) as people">
+    <ion-list mode="ios">
+      <ion-item *ngFor="let person of people">
+        <ion-label>{{person.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
