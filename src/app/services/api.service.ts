@@ -11,8 +11,8 @@ export class ApiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getPlanets() {
-    return this.httpClient.get<any>(`${this.apiUrl}/planets`).pipe(map(res => {
+  getPlanets(page: number) {
+    return this.httpClient.get<any>(`${this.apiUrl}/planets/?page=${page}`).pipe(map(res => {
       return res.results.map((planet: Planet) => {
         return {
           name: planet.name,
@@ -56,6 +56,7 @@ export class ApiService {
 
 
 export interface Planet {
+  index: number
   name: string
   terrain: string
   climate: string

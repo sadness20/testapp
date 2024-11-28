@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ApiService, Planet } from '../services/api.service';
 import { PlanetInfoComponent } from './planet-info/planet-info.component';
-import { ModalController } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
@@ -10,23 +10,43 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
-
-  public planets: Observable<Planet[]> = of([])
+  public planets: Planet[] = []
+  public currentPage = 1
+  public limit = 10
+  public isLoading = false
 
   constructor(private apiService: ApiService, private modalCtrl: ModalController) {
-    this.planets = apiService.getPlanets()
-
-    apiService.getPlanets().subscribe(res => {
-      console.log(res)
-    })
+    this.loadPlanets();
   }
 
-  async viewPlanet(planet: Planet) {
+  loadPlanets() {
+    this.isLoading = true;
+    this.apiService.getPlanets(this.currentPage).subscribe(
+      (res) => {
+        this.planets = [...this.planets, ...res]
+        this.isLoading = false
+      },
+      (err) => {
+        console.error(err);
+        this.currentPage --
+        this.isLoading = false
+      }
+    );
+  }
+
+  onIonInfinite(event: any) {
+    this.currentPage ++
+    this.loadPlanets()
+    setTimeout(() => {
+      (event as InfiniteScrollCustomEvent).target.complete()
+    }, 500)
+  }
+
+  async viewPlanet(planet: Planet, index: number) {
     const modal = await this.modalCtrl.create({
       component: PlanetInfoComponent,
-      componentProps: { planet },
+      componentProps: { planet: {...planet, index} },
     });
     return await modal.present();
   }
-
 }

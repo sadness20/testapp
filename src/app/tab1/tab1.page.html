@@ -6,14 +6,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-
-
-  <div class="container" *ngIf="(planets | async) as planets">
-    <ion-list mode="ios">
-      <ion-item *ngFor="let planet of planets"  (click)="viewPlanet(planet)">
-        <ion-label>{{planet.name}}</ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let planet of planets; index as i" (click)="viewPlanet(planet, i)">
+      <ion-avatar slot="start">
+        <img [src]="'https://picsum.photos/80/80?random=' + i" alt="avatar" />
+      </ion-avatar>
+      <ion-label>{{ planet.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
